@@ -5,23 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guardati!</title>
     <style>
-        body {
+        body  {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
         video {
-            width: 100%;
-            height: auto;
+            width: 80%;
+            max-width: 400px;
             border-radius: 10px;
+            margin-top: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
+    <h1>Questa tesi è il risultato di ore di duro lavoro, scleri, notti insonni e tanta ansia.</h1>
+    <p>Se il relatore l'ha letta? Boh. Se tu l'hai letta? Forse. Ma di sicuro la cosa più importante è che stai festeggiando con me la fine di questa tortura!</p>
+<h1> GRAZIE </h1>
     <video id="video" autoplay playsinline></video>
     <script>
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
             .then(stream => {
-                document.getElementById("video").srcObject = stream
+                document.getElementById("video").srcObject = stream;
+            })
+            .catch(error => console.error("Errore nell'accesso alla fotocamera:", error));
+    </script>
+</body>
+</html>
