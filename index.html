@@ -74,69 +74,42 @@
         }
     </style>
 </head>
+</head>
 <body>
-    <div class="big-text">TU!</div>
-    <p>Grazie per essere qui! La tua presenza rende speciale questo momento. ❤️</p>
-    <video id="previewVideo" autoplay playsinline></video>
-    <h2>📸 Ora lascia il tuo ricordo!</h2>
+    <h1>Questa tesi è il risultato di ore di duro lavoro, scleri, notti insonni e tanta ansia.</h1>
+    <p>Se il relatore l'ha letta? Boh. Se tu l'hai letta? Forse. Ma di sicuro la cosa più importante è che stai festeggiando con me la fine di questa tortura!</p>
+    
+    <video id="video" autoplay playsinline></video>
     <button id="capture">Scatta Foto 📸</button>
     <canvas id="canvas" style="display: none;"></canvas>
-    <h2>📷 Foto salvate dagli utenti:</h2>
+    
     <div id="gallery"></div>
+
     <script>
-        const firebaseConfig = {
-            apiKey: "TUA_API_KEY",
-            authDomain: "TUO_PROGETTO.firebaseapp.com",
-            projectId: "TUO_PROGETTO",
-            storageBucket: "TUO_PROGETTO.appspot.com",
-            messagingSenderId: "TUO_SENDER_ID",
-            appId: "TUA_APP_ID"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage();
-        const db = firebase.firestore();
-        const previewVideo = document.getElementById("previewVideo");
-        const captureButton = document.getElementById("capture");
+        const video = document.getElementById("video");
         const canvas = document.getElementById("canvas");
+        const captureButton = document.getElementById("capture");
         const gallery = document.getElementById("gallery");
+
+        // Attivare la fotocamera
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
             .then(stream => {
-                previewVideo.srcObject = stream;
+                video.srcObject = stream;
             })
             .catch(error => console.error("Errore nell'accesso alla fotocamera:", error));
+
+        // Scattare una foto e aggiungerla alla galleria
         captureButton.addEventListener("click", () => {
             const context = canvas.getContext("2d");
-            canvas.width = previewVideo.videoWidth;
-            canvas.height = previewVideo.videoHeight;
-            context.drawImage(previewVideo, 0, 0, canvas.width, canvas.height);
-            if (confirm("Vuoi salvare questa foto sulla pagina?")) {
-                canvas.toBlob(blob => {
-                    const fileName = `photo_${Date.now()}.png`;
-                    const ref = storage.ref().child(fileName);
-                    ref.put(blob).then(snapshot => {
-                        ref.getDownloadURL().then(url => {
-                            db.collection("photos").add({ url: url }).then(() => {
-                                showPhoto(url);
-                            });
-                        });
-                    });
-                }, "image/png");
-            }
-        });
-        function showPhoto(url) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
             const img = document.createElement("img");
-            img.src = url;
+            img.src = canvas.toDataURL("image/png");
             img.classList.add("photo");
             gallery.appendChild(img);
-        }
-        function loadPhotos() {
-            db.collection("photos").get().then(snapshot => {
-                snapshot.forEach(doc => {
-                    showPhoto(doc.data().url);
-                });
-            });
-        }
-        loadPhotos();
+        });
     </script>
 </body>
 </html>
