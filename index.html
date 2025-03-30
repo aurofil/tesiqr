@@ -3,46 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guardati!</title>
+    <title>Scatta e salva il ricordo!</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
     <style>
-        body  {
+        /* Sfondo con sfumatura */
+        body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-            background-color: black;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
+            padding: 20px;
         }
-        video {
-            width: 80%;
-            max-width: 400px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
+
         h1 {
             font-size: 24px;
+            font-weight: bold;
             margin-bottom: 10px;
         }
+
         p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Stile per il video */
+        video, canvas {
+            width: 80%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Pulsante stilizzato */
+        button {
+            margin-top: 15px;
+            padding: 12px 20px;
             font-size: 18px;
-            margin-bottom: 10px;
+            cursor: pointer;
+            border: none;
+            background: #ff6600;
+            color: white;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: #e65c00;
+            transform: scale(1.05);
+        }
+
+        /* Galleria di foto */
+        #gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Effetto Polaroid sulle foto */
+        .photo {
+            width: 120px;
+            height: 120px;
+            margin: 10px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 4px solid white;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .photo:hover {
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
-    <h1>Questa tesi è il risultato di ore di duro lavoro, scleri, notti insonni e tanta ansia.</h1>
-    <p>Se il relatore l'ha letta? Boh. Se tu l'hai letta? Forse. Ma di sicuro la cosa più importante è che stai festeggiando con me la fine di questa tortura!</p>
-<h1> GRAZIE </h1>
+    <h1>Scatta una foto e lasciala come ricordo!</h1>
+    <p>Se scatti una foto, significa che hai letto almeno questa frase della mia tesi… più di quanto abbia fatto il relatore!</p>
+    
     <video id="video" autoplay playsinline></video>
+    <button id="capture">📸 Scatta Foto</button>
+    <canvas id="canvas" style="display: none;"></canvas>
+    
+    <h2>📷 Foto salvate dagli utenti:</h2>
+    <div id="gallery"></div>
+
     <script>
+        // Configurazione Firebase (sostituisci con le tue credenziali)
+        const firebaseConfig = {
+            apiKey: "TUA_API_KEY",
+            authDomain: "TUO_PROGETTO.firebaseapp.com",
+            projectId: "TUO_PROGETTO",
+            storageBucket: "TUO_PROGETTO.appspot.com",
+            messagingSenderId: "TUO_SENDER_ID",
+            appId: "TUA_APP_ID"
+        };
+
+        // Inizializza Firebase
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+        const db = firebase.firestore();
+
+        const video = document.getElementById("video");
+        const canvas = document.getElementById("canvas");
+        const captureButton = document.getElementById("capture");
+        const gallery = document.getElementById("gallery");
+
+        // Attivare la fotocamera
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
             .then(stream => {
-                document.getElementById("video").srcObject = stream;
+                video.srcObject = stream;
             })
             .catch(error => console.error("Errore nell'accesso alla fotocamera:", error));
+
+        // Scattare una foto e chiedere se salvarla
+        captureButton.addEventListener("click", () => {
+            const context = canvas.getContext("2d");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            if (confirm("Vuoi salvare questa foto sulla pagina?")) {
+                canvas.toBlob(blob => {
+                    const fileName = `photo_${Date.now()}.png`;
+                    const ref = storage.ref().child(fileName);
+                    ref.put(blob).then(snapshot => {
+                        ref.getDownloadURL().then(url => {
+                            db.collection("photos").add({ url: url }).then(() => {
+                                showPhoto(url);
+                            });
+                        });
+                    });
+                }, "image/png");
+            }
+        });
+
+        // Mostra una foto nella galleria
+        function showPhoto(url) {
+            const img = document.createElement("img");
+            img.src = url;
+            img.classList.add("photo");
+            gallery.appendChild(img);
+        }
+
+        // Carica le foto salvate su Firebase all'avvio
+        function loadPhotos() {
+            db.collection("photos").get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    showPhoto(doc.data().url);
+                });
+            });
+        }
+        
+        loadPhotos(); // Esegui al caricamento della pagina
     </script>
 </body>
 </html>
