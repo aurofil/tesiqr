@@ -3,113 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grazie a TE!</title>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+    <title>Guardati!</title>
     <style>
         body {
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            align-items: center;
+            height: 100vh;
+            background-color: black;
             color: white;
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
             text-align: center;
-            padding: 20px;
         }
-        .big-text {
-            font-size: 80px;
-            font-weight: bold;
+        video {
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        h1 {
+            font-size: 24px;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
         }
         p {
             font-size: 18px;
-            margin-bottom: 20px;
-        }
-        video, canvas {
-            width: 80%;
-            max-width: 400px;
-            border-radius: 15px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
-        button {
-            margin-top: 10px;
-            padding: 12px 20px;
-            font-size: 18px;
-            cursor: pointer;
-            border: none;
-            background: #ff6600;
-            color: white;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        button:hover {
-            background: #e65c00;
-            transform: scale(1.05);
-        }
-        #gallery {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .photo {
-            width: 120px;
-            height: 120px;
-            margin: 10px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 4px solid white;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-        }
-        .photo:hover {
-            transform: scale(1.1);
+            margin-bottom: 10px;
         }
     </style>
-</head>
 </head>
 <body>
     <h1>Questa tesi è il risultato di ore di duro lavoro, scleri, notti insonni e tanta ansia.</h1>
     <p>Se il relatore l'ha letta? Boh. Se tu l'hai letta? Forse. Ma di sicuro la cosa più importante è che stai festeggiando con me la fine di questa tortura!</p>
-    
     <video id="video" autoplay playsinline></video>
-    <button id="capture">Scatta Foto 📸</button>
-    <canvas id="canvas" style="display: none;"></canvas>
-    
-    <div id="gallery"></div>
-
     <script>
-        const video = document.getElementById("video");
-        const canvas = document.getElementById("canvas");
-        const captureButton = document.getElementById("capture");
-        const gallery = document.getElementById("gallery");
-
-        // Attivare la fotocamera
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
             .then(stream => {
-                video.srcObject = stream;
+                document.getElementById("video").srcObject = stream;
             })
             .catch(error => console.error("Errore nell'accesso alla fotocamera:", error));
-
-        // Scattare una foto e aggiungerla alla galleria
-        captureButton.addEventListener("click", () => {
-            const context = canvas.getContext("2d");
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const img = document.createElement("img");
-            img.src = canvas.toDataURL("image/png");
-            img.classList.add("photo");
-            gallery.appendChild(img);
-        });
     </script>
 </body>
 </html>
