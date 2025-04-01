@@ -13,10 +13,21 @@
             height: 100vh;
             background-color: #87CEEB; /* Azzurro cielo */
             color: #333;
-            font-family: "Georgia", serif;
+            font-family: "Arial", sans-serif;
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            font-size: 80px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
         video {
             width: 80%;
@@ -25,23 +36,24 @@
             margin-top: 20px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
-        h1 {
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
         p {
-            font-size: 20px;
+            font-size: 18px;
             font-style: italic;
             max-width: 600px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>A chi dedico questa tesi?</h1>
-    <p>Non servono grandi discorsi, perché la risposta è davanti a te... Anzi, <strong>sei tu</strong>!<br>
-       Grazie per essere parte del mio viaggio. Senza di te, questa avventura non sarebbe stata la stessa. 💙</p>
+    <h1> A chi voglio ringraziare ?</h1>
+    <span class="highlight"> A TE ! </span>
     
     <video id="video" autoplay playsinline></video>
+
+    <p>Se il relatore l'ha letta? Non penso.  
+       Se tu l'hai letta? Difficile...  
+       Ma almeno sei qui a festeggiare con me. <br>  
+       <strong>Grazie ❤️</strong></p>
 
     <script>
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
