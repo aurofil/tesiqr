@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guardati!</title>
+    <title>Grazie di cuore!</title>
     <style>
         body {
             display: flex;
@@ -11,31 +11,38 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
+            background-color: #87CEEB; /* Azzurro cielo */
+            color: #333;
+            font-family: "Georgia", serif;
             text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
         video {
             width: 80%;
-            max-width: 400px;
-            border-radius: 10px;
+            max-width: 350px;
+            border-radius: 15px;
             margin-top: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
         h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-size: 28px;
+            margin-bottom: 15px;
         }
         p {
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 20px;
+            font-style: italic;
+            max-width: 600px;
         }
     </style>
 </head>
 <body>
-    <h1>Questa tesi è il risultato di ore di duro lavoro, scleri, notti insonni e tanta ansia.</h1>
-    <p>Se il relatore l'ha letta? Boh. Se tu l'hai letta? Forse. Ma di sicuro la cosa più importante è che stai festeggiando con me la fine di questa tortura!</p>
+    <h1>A chi dedico questa tesi?</h1>
+    <p>Non servono grandi discorsi, perché la risposta è davanti a te... Anzi, <strong>sei tu</strong>!<br>
+       Grazie per essere parte del mio viaggio. Senza di te, questa avventura non sarebbe stata la stessa. 💙</p>
+    
     <video id="video" autoplay playsinline></video>
+
     <script>
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
             .then(stream => {
